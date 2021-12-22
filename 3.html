@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Search form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <form id="callDB" class="col md-12">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-header">Search student</div>
+                        <div class="card-body">
+                            <h5 class="card-title">with AJAX</h5>
+                            <p>it will return a array of objects (Json).</p>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="studentInput" aria-describedby="studentHelp"
+                                       placeholder="Search student" aria-label="Search student" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button"
+                                            id="btnSearch">
+                                        Search
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">List all students</h5>
+                                    <input type="button" value="List" id="btnGetPosts" class="btn btn-primary">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="card">
+                        <div class="card-header">
+                            Results Should dispay here
+                        </div>
+                        <!--
+                    <div id="wait" style="width: 69; height: 89; position:absolute;top:20%;left:50%;padding:2px;">
+                        <img src="../images/demo_wait.gif" width="64" height="64" />
+                        <br />Loading..
+                    </div>
+                    -->
+                        <ul id="listResults" class="list-group list-group-flush">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br />
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <!--<th scope="col">#</th>-->
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Studet ID</th>
+                    <th scope="col">e-Mail</th>
+                    <th scope="col">Current Time</th>
+                </tr>
+            </thead>
+            <tbody id="tblBody"></tbody>
+        </table>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#wait").hide();
+            $("#listResults").ajaxStart(function () {
+                $("#wait").show();
+            });
+            $("#listResults").ajaxComplete(function () {
+                $("#wait").css("display", "none");
+            });
+
+            $("#btnSearch").click(function () {
+                $.get("https://ip-uacs.herokuapp.com/api/student", {
+                    name: document.getElementById("studentInput").value
+                }, function (result) {
+                    $("#listResults").html(result.map(item => `<li class="list-group-item">${item.firstName} ${item.lastName}</li>`));
+                });
+            });
+
+            $("#btnSearch1").click(function () {
+                var studentId = $('#studentInput').val();
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://ip-uacs.herokuapp.com/api/student',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#tblBody').empty();
+                        $.each(data, function (index, val) {
+                            if (studentId.match('/'+val.studentId+'/')) {
+                                var content = '<tr>';
+                                //content += '<td>' + val.id + '</td>';
+                                content += '<td>' + val.firstName + '</td>';
+                                content += '<td>' + val.lastName + '</td>';
+                                content += '<td>' + val.studentId + '</td>';
+                                content += '<td>' + val.email + '</td>';
+                                content += '<td>' + val.currentDate + '</td>';
+                                content += '</tr>';
+                                $('#tblBody').append(content);
+                            }
+                        });
+                    }
+                })
+                $.get("https://ip-uacs.herokuapp.com/api/student", {
+                    name: document.getElementById("studentInput").value
+                }, function (result) {
+                    $("#listResults").html(result.map(item => `<li class="list-group-item">${item.firstName} ${item.lastName}</li>`));
+                });
+            });
+
+
+            $('#btnGetPosts').click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://ip-uacs.herokuapp.com/api/student',
+                    dataType: 'json',
+                    success: function (data) {
+
+                        $('#tblBody').empty();
+                        $.each(data, function (index, val) {
+
+                            var content = '<tr>';
+                            //content += '<td>' + val.id + '</td>';
+                            content += '<td>' + val.firstName + '</td>';
+                            content += '<td>' + val.lastName + '</td>';
+                            content += '<td>' + val.studentId + '</td>';
+                            content += '<td>' + val.email + '</td>';
+                            content += '<td>' + val.currentDate + '</td>';
+                            content += '</tr>';
+                            $('#tblBody').append(content);
+                        });
+                    }
+                });
+
+            });
+        });
+    </script>
+</body>
+
+</html>

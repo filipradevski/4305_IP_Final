@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lecture 5.2</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+</head>
+
+<body class="col">
+    <header>
+        <h1>Call to Json Placeholder</h1>
+    </header>
+    <form id="callDB" class="col-md-12">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header"> Call a simple api </div>
+                    <div class="card-body">
+                        <h5 class="card-title">calling api method</h5>
+                        <p>it will return a array of objects.</p>
+                        <input type="button" value="Call Api" id="btnGetPosts" class="btn btn-primary">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Call api single</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">returns one record</h6>
+                        <p class="card-text">takes id of record.</p>
+                        <label for="userId">User Id</label>
+                        <input type="text" class="form-control" id="userId" aria-describedby="idHelp" placeholder="User Id" required>
+                        <small id="idHelp" class="form-text text-muted">Enter user Id</small>
+                        <input type="button" value="Call Api Single" id="btnGetPostSingle" class="btn btn-link btn-danger">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Post to Api</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">returns object</h6>
+                        <p class="card-text">Object properties</p>
+                        <div class="col col-md-7">
+                            <div class="form-group">
+                                <label for="userId">User Id</label>
+                                <input type="number" min="1" max="9999" class="form-control" id="idUser" aria-describedby="idHelp" placeholder="User Id" required>
+                                <small id="idHelp" class="form-text text-muted">Enter user Id</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" id="title" aria-describedby="titleHelp" placeholder="Title" required>
+                                <small id="titleHelp" class="form-text text-muted">Enter Post title</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="bodyInput">Post Body</label>
+                                <input type="text" class="form-control" id="bodyInput" aria-describedby="bodyHelp" placeholder="Enter body text" required>
+                                <small id="bodyHelp" class="form-text text-muted">Sample body text.</small>
+                            </div>
+                            <input type="button" value="POST Api" id="btnPost" class="btn btn-warning">
+                            <input type="button" value="PUT Api" id="btnPut" class="btn btn-info">
+                            <input type="button" value="DELETE Api" id="btnDelete" class="btn btn-danger">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">name</th>
+                <th scope="col">username</th>
+                <th scope="col">email</th>
+                <th scope="col">phone</th>
+                <th scope="col">website</th>
+            </tr>
+        </thead>
+        <tbody id="tblBody"></tbody>
+    </table>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js">
+</script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqBootstrapValidation/1.3.7/jqBootstrapValidation.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script>
+    $(document).ready(function() {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-full-width",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        $('#btnGetPosts').click(function() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://jsonplaceholder.typicode.com/users',
+                dataType: 'json',
+                success: function(data) {
+
+                    $('#tblBody').empty();
+                    $.each(data, function(index, val) {
+
+                        var content = '<tr>';
+                        content += '<td>' + val.id + '</td>';
+                        content += '<td>' + val.name + '</td>';
+                        content += '<td>' + val.username + '</td>';
+                        content += '<td>' + val.email + '</td>';
+                        content += '<td>' + val.phone + '</td>';
+                        content += '<td>' + val.website + '</td>';
+                        content += '</tr>';
+                        $('#tblBody').append(content);
+                    });
+                }
+            });
+
+        });
+    });
+
+    $('#btnGetPostSingle').click(function() {
+        var userId = $('#userId').val();
+        $.ajax({
+            type: 'GET',
+            url: 'http://jsonplaceholder.typicode.com/users/' + userId,
+            dataType: 'json',
+            success: function(data) {
+
+                $('#tblBody').empty();
+
+                var content = '<tr>';
+                content += '<td>' + data.id + '</td>';
+                content += '<td>' + data.name + '</td>';
+                content += '<td>' + data.username + '</td>';
+                content += '<td>' + data.email + '</td>';
+                content += '<td>' + data.phone + '</td>';
+                content += '<td>' + data.website + '</td>';
+                content += '</tr>';
+                $('#tblBody').append(content);
+            }
+        });
+    });
+
+    $('#btnPost').click(function() {
+        debugger
+        $.ajax({
+            type: 'POST',
+            url: 'https://jsonplaceholder.typicode.com/posts',
+            dataType: 'json',
+            data: {
+                title: $('#title').val(),
+                body: $('#bodyInput').val(),
+                userId: $('#idUser').val()
+            },
+            success: function(data) {
+                debugger
+                toastr["success"]('Data Inserted');
+                console.log(data);
+                $('#tblBody').empty();
+                var content = '<tr>';
+                content += '<td>' + data.id + '</td>';
+                content += '<td>' + data.title + '</td>';
+                content += '<td>' + data.body + '</td>';
+                content += '<td>' + data.userId + '</td>';
+                content += '<td>' + '' + '</td>';
+                content += '<td>' + '' + '</td>';
+                content += '</tr>';
+                $('#tblBody').append(content);
+            },
+            error: function(response) {
+                debugger
+                toastr["error"](response.responseText);
+                console.log(response);
+            },
+        });
+    });
+
+    $('#btnPut').click(function(e) {
+        e.preventDefault();
+        var userId = $('#userId').val();
+        $.ajax({
+            type: 'PUT',
+            url: 'https://jsonplaceholder.typicode.com/posts/1',
+            dataType: 'json',
+            data: {
+                title: $('#title').val(),
+                body: $('#bodyInput').val(),
+                userId: $('#idUser').val(),
+                id: 1
+            },
+            success: function(data) {
+                debugger
+                toastr["success"]('Data Updated');
+                console.log(data);
+                $('#tblBody').empty();
+                var content = '<tr>';
+                content += '<td>' + data.id + '</td>';
+                content += '<td>' + data.title + '</td>';
+                content += '<td>' + data.body + '</td>';
+                content += '<td>' + data.userId + '</td>';
+                content += '<td>' + '' + '</td>';
+                content += '<td>' + '' + '</td>';
+                content += '</tr>';
+                $('#tblBody').append(content);
+            },
+            error: function(response) {
+                debugger
+                toastr["error"](response.responseText);
+                console.log(response);
+            },
+        });
+    });
+
+    $('#btnDelete').click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'DELETE',
+            url: 'https://jsonplaceholder.typicode.com/posts/1',
+            dataType: 'json',
+            success: function(data) {
+                debugger
+                toastr["success"]('Data Deleted');
+                console.log(data);
+            },
+            error: function(response) {
+                debugger
+                toastr["error"](response.responseText);
+                console.log(response);
+            }
+        });
+    });
+</script>
+
+</html>

@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lecture 5.2</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+</head>
+
+<body class="col">
+    <header>
+        <h1>Call to Json Placeholder</h1>
+    </header>
+    <form id="callDB" class="col-md-12">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header"> Call a simple api </div>
+                    <div class="card-body">
+                        <h5 class="card-title">calling api method</h5>
+                        <p>it will return a array of objects.</p>
+                        <input type="button" value="Call Api" id="btnGetPosts" class="btn btn-primary">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Call api single</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">returns one record</h6>
+                        <p class="card-text">takes id of record.</p>
+                        <label for="studentId">Student ID</label>
+                        <input type="text" class="form-control" id="studentId" aria-describedby="studentIdHelp" placeholder="Student ID" required>
+                        <small id="studentIdHelp" class="form-text text-muted">Enter student Id</small>
+                        <input type="button" value="Get Single Student" id="btnGetPostSingle" class="btn btn-link btn-danger">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Post to Api</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">returns object</h6>
+                        <p class="card-text">Object properties</p>
+                        <div class="col col-md-7">
+                            <div class="form-group">
+                                <label for="studentId">Student Id</label>
+                                <input type="number" min="1" max="9999" class="form-control" id="studentId" aria-describedby="studentIdHelp" placeholder="Student ID" required>
+                                <small id="studentIdHelp" class="form-text text-muted">Enter Post studentId</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" aria-describedby="firstNameHelp" placeholder="First Name" required>
+                                <small id="firstNameHelp" class="form-text text-muted">Enter Post firstName</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" aria-describedby="lastNameHelp" placeholder="Last Name" required>
+                                <small id="lastNameHelp" class="form-text text-muted">Enter Post lastName</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">e-Mail</label>
+                                <input type="text" class="form-control" id="email" aria-describedby="emailelp" placeholder="Enter e-Mail" required>
+                                <small id="emailHelp" class="form-text text-muted">Enter email.</small>
+                            </div>
+                            <input type="button" value="POST Api" id="btnPost" class="btn btn-warning">
+                            <!--
+                            <input type="button" value="PUT Api" id="btnPut" class="btn btn-info">
+                            <input type="button" value="DELETE Api" id="btnDelete" class="btn btn-danger">
+                            -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">StudentId</th>
+                <th scope="col">email</th>
+                <th scope="col">createDate</th>
+            </tr>
+        </thead>
+        <tbody id="tblBody"></tbody>
+    </table>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js">
+</script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqBootstrapValidation/1.3.7/jqBootstrapValidation.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-full-width",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        $('#btnGetPosts').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: 'https://ip-uacs.herokuapp.com/api/student',
+                dataType: 'json',
+                success: function (data) {
+
+                    $('#tblBody').empty();
+                    $.each(data, function (index, val) {
+
+                        var content = '<tr>';
+                        content += '<td>' + val.id + '</td>';
+                        content += '<td>' + val.firstName + '</td>';
+                        content += '<td>' + val.lastName + '</td>';
+                        content += '<td>' + val.studentId + '</td>';
+                        content += '<td>' + val.email + '</td>';
+                        content += '<td>' + val.createDate + '</td>';
+                        content += '</tr>';
+                        $('#tblBody').append(content);
+                    });
+                }
+            });
+
+        });
+    });
+
+    $('#btnGetPostSingle').click(function () {
+        var studentId = $('#studentId').val();
+        var studentUuid = getStudentUUID(studentId);
+
+        console.log("3"+studentUuid);
+
+        $.ajax({
+            type: 'GET',
+            url: 'https://ip-uacs.herokuapp.com/api/student/' + studentUuid,
+            dataType: 'json',
+            success: function (data) {
+
+                $('#tblBody').empty();
+
+                var content = '<tr>';
+                content += '<td>' + data.id + '</td>';
+                content += '<td>' + data.firstName + '</td>';
+                content += '<td>' + data.lastName + '</td>';
+                content += '<td>' + data.studentId + '</td>';
+                content += '<td>' + data.email + '</td>';
+                content += '<td>' + data.createDate + '</td>';
+                content += '</tr>';
+                $('#tblBody').append(content);
+            }
+        });
+    });
+
+    $('#btnPost').click(function () {
+        var req = new Object();
+        req["firstName"] = $('#firstName').val();
+        req["lastName"] = $('#lastName').val();
+        req["studentId"] = $('#studentId').val();
+        req["email"] = $('#email').val();
+        req["createDate"] = Date.now();
+        debugger
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: 'POST',
+            url: 'https://ip-uacs.herokuapp.com/api/student',
+            dataType: 'json',
+            data: JSON.stringify(req),
+            success: function (data) {
+                debugger
+                toastr["success"]('Data Inserted');
+                console.log(data);
+                $('#tblBody').empty();
+                var content = '<tr>';
+                content += '<td>' + '' + '</td>';
+                content += '<td>' + data.studentId + '</td>';
+                content += '<td>' + data.firstName + '</td>';
+                content += '<td>' + data.lastName + '</td>';
+                content += '<td>' + data.email + '</td>';
+                content += '<td>' + '' + '</td>';
+                content += '</tr>';
+                $('#tblBody').append(content);
+            },
+            error: function (response) {
+                debugger
+                toastr["error"](response.responseText);
+                console.log(response);
+            },
+        });
+    });
+
+    function getStudentUUID(studentId) {
+        //var uuid = "xxx";
+        $.data({
+            type: 'GET',
+            url: 'https://ip-uacs.herokuapp.com/api/student',
+            dataType: 'json',
+            success: function (data) {
+                $('#tblBody').empty();
+                $.each(data, function (index, val) {
+                    //console.log(studentId + " == " + val.studentId + (studentId === val.studentId) );
+                    if (studentId === val.studentId) {
+                        console.log("1----" + val.id);
+                        uuid = val.id;
+                        console.log("2----" + uuid);
+                        return val.id;
+                    } else {
+
+                    }
+                });
+            }
+        });
+        //console.log("2" + uuid);
+        return "";
+    }
+</script>
+
+</html>
